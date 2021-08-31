@@ -10,15 +10,11 @@ const AllLists = props => {
   const [renameListId, setRenameListId] = useState(null);
 
   const handleAddList = ({ keyCode, target: { value } }) => {
-    if (keyCode === 13) {
-      if (!value || /^\s*$/.test(value)) {
-        return;
-      }
+    if (keyCode === 13 && value) {
       const newList = {
         id: uuid(),
         name: value,
-        dateString: new Date().toLocaleDateString(),
-        incompleteTaskCount: 0
+        dateString: new Date().toLocaleDateString()
       };
       props.addList(newList);
       listNameInput.current.value = '';
@@ -26,8 +22,7 @@ const AllLists = props => {
   };
 
   const handleDeleteClick = id => {
-    // TODO: DELETE ALL RELATED TODOS
-    // MAKE SPECIAL ACTION FOR THIS
+    props.deleteItems(id);
     props.deleteList(id);
     props.onListNameClick(null);
   };
@@ -38,11 +33,10 @@ const AllLists = props => {
 
   const handleRenameList = ({ keyCode, target: { value } }) => {
     if (keyCode === 13) {
-      if (!value || /^\s*$/.test(value)) {
-        return;
+      if (value) {
+        props.renameList(renameListId, value);
+        renameListInput.current.value = '';
       }
-      props.renameList(renameListId, value);
-      renameListInput.current.value = '';
       setRenameListId(null);
     }
   };
@@ -88,6 +82,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addList: newList => dispatch({ type: types.ADD_LIST, payload: newList }),
     deleteList: id => dispatch({ type: types.DELETE_LIST, payload: id }),
+    deleteItems: listId =>
+      dispatch({ type: types.DELETE_ITEMS, payload: listId }),
     renameList: (id, newName) =>
       dispatch({ type: types.RENAME_LIST, payload: { id: id, name: newName } })
   };

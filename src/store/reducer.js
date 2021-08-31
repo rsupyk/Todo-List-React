@@ -22,6 +22,8 @@ const todosHandlers = {
   [types.ADD_ITEM]: (state, { payload }) => [...state, payload],
   [types.DELETE_ITEM]: (state, { payload }) =>
     state.filter(item => item.id !== payload),
+  [types.DELETE_ITEMS]: (state, { payload }) =>
+    state.filter(item => item.listId !== payload),
   [types.RENAME_ITEM]: (state, { payload }) => {
     const newState = [...state];
     newState.find(item => item.id === payload.id).task = payload.task;
@@ -29,7 +31,7 @@ const todosHandlers = {
   },
   [types.TOGGLE_DONE]: (state, { payload }) => {
     const newState = [...state];
-    const item = newState.find(item => item.id === payload.id);
+    const item = newState.find(item => item.id === payload);
     item.complete = !item.complete;
     return newState;
   },

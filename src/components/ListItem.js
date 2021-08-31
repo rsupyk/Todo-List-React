@@ -13,6 +13,7 @@ const ListItem = props => {
   };
 
   const handleRename = () => {
+    onListNameClick(id);
     onRenameListClick(id);
   };
 
