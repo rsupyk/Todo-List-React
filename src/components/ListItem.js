@@ -1,4 +1,5 @@
 import React from 'react';
+import { BsPen, BsTrash } from 'react-icons/bs';
 
 const ListItem = props => {
   const { id, name, onListNameClick, onDeleteListClick, onRenameListClick } =
@@ -18,10 +19,10 @@ const ListItem = props => {
   };
 
   return (
-    <li>
+    <li className={props.className}>
       <span onClick={handleClick}>{name}</span>
-      <button onClick={handleRename}>Rename</button>
-      <button onClick={handleDelete}>Delete</button>
+      <BsPen onClick={handleRename} style={{ marginLeft: '1rem' }} />
+      <BsTrash onClick={handleDelete} style={{ marginLeft: '.5rem' }} />
     </li>
   );
 };

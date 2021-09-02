@@ -68,18 +68,22 @@ const TodoList = props => {
   );
 
   return (
-    <div>
-      <div>{list.name}</div>
-      <div>{list.dateString}</div>
-      <div>{incompleteCount}</div>
-      {renderedTodos}
-      {editTodoInput}
-      <input
-        type='text'
-        placeholder='new task name'
-        ref={taskNameInput}
-        onKeyUp={handleAddTodo}
-      />
+    <div className='todo-list'>
+      <div className='todo-list-header'>
+        <h2>{list.name}</h2>
+        <p className='todo-list-info'>{list.dateString}</p>
+        <p className='todo-list-info'>{incompleteCount}</p>
+      </div>
+      <div className='todo-list-body'>
+        {renderedTodos}
+        {editTodoInput}
+        <input
+          type='text'
+          placeholder='new task name'
+          ref={taskNameInput}
+          onKeyUp={handleAddTodo}
+        />
+      </div>
     </div>
   );
 };

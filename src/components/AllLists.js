@@ -8,6 +8,7 @@ const AllLists = props => {
   const listNameInput = useRef(null);
   const renameListInput = useRef(null);
   const [renameListId, setRenameListId] = useState(null);
+  const [activeId, setActiveId] = useState(null);
 
   const handleAddList = ({ keyCode, target: { value } }) => {
     if (keyCode === 13 && value) {
@@ -41,14 +42,20 @@ const AllLists = props => {
     }
   };
 
+  const handleListNameClick = id => {
+    setActiveId(id);
+    props.onListNameClick(id);
+  };
+
   const renderedLists = props.allLists.map(list => (
     <ListItem
       key={list.id}
       id={list.id}
       name={list.name}
-      onListNameClick={props.onListNameClick}
+      onListNameClick={handleListNameClick}
       onDeleteListClick={handleDeleteClick}
       onRenameListClick={handleRenameClick}
+      className={activeId === list.id && 'active-list'}
     />
   ));
 
@@ -62,9 +69,9 @@ const AllLists = props => {
   );
 
   return (
-    <div>
+    <div className='left-box'>
       <h2>All lists</h2>
-      <ul>{renderedLists}</ul>
+      <ul className='all-lists'>{renderedLists}</ul>
       {editNameInput}
       <input
         type='text'

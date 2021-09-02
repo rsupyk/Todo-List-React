@@ -1,4 +1,5 @@
 import React from 'react';
+import { BsPen, BsTrash } from 'react-icons/bs';
 
 const TodoItem = props => {
   const {
@@ -23,10 +24,16 @@ const TodoItem = props => {
   const taskElement = complete ? <s>{task}</s> : task;
 
   return (
-    <div>
+    <div className='task'>
       <span onClick={handleClick}>{taskElement}</span>
-      <button onClick={handleRename}>Rename</button>
-      <button onClick={handleDelete}>Delete</button>
+      <div>
+        <button onClick={handleRename}>
+          <BsPen />
+        </button>
+        <button onClick={handleDelete}>
+          <BsTrash />
+        </button>
+      </div>
     </div>
   );
 };

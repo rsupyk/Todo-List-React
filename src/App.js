@@ -10,7 +10,6 @@ const App = () => {
   return (
     <div>
       <AllLists onListNameClick={onUserClick} />
-      <hr />
       {listId && <TodoList listId={listId} resetListId={resetListId} />}
     </div>
   );
