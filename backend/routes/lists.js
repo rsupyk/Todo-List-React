@@ -3,10 +3,15 @@ const router = express.Router();
 const listSchema = require('../models/list');
 const { Validator } = require('express-json-validator-middleware');
 const { validate } = new Validator();
+const { getAllTodos, deleteTodosFromList } = require('./todos');
 
 // Get all
 router.get('/', (req, res) => {
-  res.json(lists);
+  const data = {
+    lists: lists,
+    todos: getAllTodos()
+  };
+  res.json(data);
 });
 
 // Create
@@ -25,9 +30,10 @@ router.patch('/:id', getList, (req, res) => {
 
 // Delete
 router.delete('/:id', getList, (req, res) => {
+  deleteTodosFromList(res.list.id);
   const index = lists.findIndex(list => list.id === res.list.id);
   lists.splice(index, 1);
-  res.json({ message: 'Deleted Subscriber' });
+  res.json({ message: 'Deleted list' });
 });
 
 function getList(req, res, next) {

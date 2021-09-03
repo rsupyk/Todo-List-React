@@ -23,10 +23,13 @@ router.post('/', validate({ body: todoSchema }), (req, res) => {
 
 // Update
 router.patch('/:id', getTodo, (req, res) => {
+  if (req.body.complete != null) {
+    res.todo.complete = req.body.complete;
+  }
   if (req.body.task != null) {
     res.todo.task = req.body.task;
-    res.json(res.todo);
   }
+  res.json(res.todo);
 });
 
 // Delete
@@ -36,12 +39,6 @@ router.delete('/:id', getTodo, (req, res) => {
   res.json({ message: 'Deleted todo' });
 });
 
-// Delete many by listId
-router.delete('/listId/:id', (req, res) => {
-  todos = todos.filter(todo => todo.listId !== req.params.id);
-  res.json({ message: 'Deleted many todos' });
-});
-
 function getTodo(req, res, next) {
   const todo = todos.find(todo => todo.id === req.params.id);
   if (todo == null) {
@@ -49,6 +46,10 @@ function getTodo(req, res, next) {
   }
   res.todo = todo;
   next();
+}
+
+function deleteManyByListId(id) {
+  todos = todos.filter(todo => todo.listId !== id);
 }
 
 let todos = [
@@ -90,4 +91,8 @@ let todos = [
   }
 ];
 
-module.exports = router;
+module.exports = {
+  todosRouter: router,
+  getAllTodos: () => todos,
+  deleteTodosFromList: deleteManyByListId
+};
