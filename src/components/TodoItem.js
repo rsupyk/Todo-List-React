@@ -10,7 +10,7 @@ const TodoItem = props => {
   } = props;
 
   const handleClick = () => {
-    onItemClick(id);
+    onItemClick(id, complete);
   };
 
   const handleDelete = () => {

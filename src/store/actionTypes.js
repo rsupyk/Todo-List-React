@@ -1,0 +1,10 @@
+export const CREATE_LIST = 'CREATE_LIST';
+export const RENAME_LIST = 'RENAME_LIST';
+export const DELETE_LIST = 'DELETE_LIST';
+export const CREATE_TODO = 'CREATE_TODO';
+export const RENAME_TODO = 'RENAME_TODO';
+export const DELETE_TODO = 'DELETE_TODO';
+export const TOGGLE_DONE = 'TOGGLE_DONE';
+export const STORE_LIST_ALL = 'STORE_LIST_ALL';
+export const STORE_TODO_ALL = 'STORE_TODO_ALL';
+export const DELETE_TODO_ALL = 'DELETE_TODO_ALL';

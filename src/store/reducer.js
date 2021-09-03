@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux';
-import * as types from './actions';
+import * as actionTypes from './actionTypes';
 
 const listsHandlers = {
-  [types.ADD_LIST]: (state, { payload }) => [...state, payload],
-  [types.DELETE_LIST]: (state, { payload }) =>
+  [actionTypes.STORE_LIST_ALL]: (state, { payload }) => [...state, ...payload],
+  [actionTypes.CREATE_LIST]: (state, { payload }) => [...state, payload],
+  [actionTypes.DELETE_LIST]: (state, { payload }) =>
     state.filter(list => list.id !== payload),
-  [types.RENAME_LIST]: (state, { payload }) => {
+  [actionTypes.RENAME_LIST]: (state, { payload }) => {
     const newState = [...state];
     newState.find(list => list.id === payload.id).name = payload.name;
     return newState;
@@ -19,20 +20,21 @@ export const listsReducer = (state = [], action) => {
 };
 
 const todosHandlers = {
-  [types.ADD_ITEM]: (state, { payload }) => [...state, payload],
-  [types.DELETE_ITEM]: (state, { payload }) =>
+  [actionTypes.STORE_TODO_ALL]: (state, { payload }) => [...state, ...payload],
+  [actionTypes.CREATE_TODO]: (state, { payload }) => [...state, payload],
+  [actionTypes.DELETE_TODO]: (state, { payload }) =>
     state.filter(item => item.id !== payload),
-  [types.DELETE_ITEMS]: (state, { payload }) =>
+  [actionTypes.DELETE_TODO_ALL]: (state, { payload }) =>
     state.filter(item => item.listId !== payload),
-  [types.RENAME_ITEM]: (state, { payload }) => {
+  [actionTypes.RENAME_TODO]: (state, { payload }) => {
     const newState = [...state];
     newState.find(item => item.id === payload.id).task = payload.task;
     return newState;
   },
-  [types.TOGGLE_DONE]: (state, { payload }) => {
+  [actionTypes.TOGGLE_DONE]: (state, { payload }) => {
     const newState = [...state];
-    const item = newState.find(item => item.id === payload);
-    item.complete = !item.complete;
+    const item = newState.find(item => item.id === payload.id);
+    item.complete = payload.complete;
     return newState;
   },
   DEFAULT: state => state

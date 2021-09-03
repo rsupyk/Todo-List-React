@@ -1,14 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import uuid from 'react-uuid';
 import { connect } from 'react-redux';
 import ListItem from './ListItem';
-import * as types from '../store/actions';
+import {
+  listGetAll,
+  listCreate,
+  listDelete,
+  listUpdate
+} from '../store/actions';
 
 const AllLists = props => {
+  const { listGetAll } = props;
   const listNameInput = useRef(null);
   const renameListInput = useRef(null);
   const [renameListId, setRenameListId] = useState(null);
   const [activeId, setActiveId] = useState(null);
+
+  useEffect(() => listGetAll(), [listGetAll]);
 
   const handleAddList = ({ keyCode, target: { value } }) => {
     if (keyCode === 13 && value) {
@@ -17,14 +25,13 @@ const AllLists = props => {
         name: value,
         dateString: new Date().toLocaleDateString()
       };
-      props.addList(newList);
+      props.listCreate(newList);
       listNameInput.current.value = '';
     }
   };
 
   const handleDeleteClick = id => {
-    props.deleteItems(id);
-    props.deleteList(id);
+    props.listDelete(id);
     props.onListNameClick(null);
   };
 
@@ -35,7 +42,7 @@ const AllLists = props => {
   const handleRenameList = ({ keyCode, target: { value } }) => {
     if (keyCode === 13) {
       if (value) {
-        props.renameList(renameListId, value);
+        props.listUpdate(renameListId, value);
         renameListInput.current.value = '';
       }
       setRenameListId(null);
@@ -55,7 +62,7 @@ const AllLists = props => {
       onListNameClick={handleListNameClick}
       onDeleteListClick={handleDeleteClick}
       onRenameListClick={handleRenameClick}
-      className={activeId === list.id && 'active-list'}
+      className={activeId === list.id ? 'active-list' : ''}
     />
   ));
 
@@ -85,15 +92,6 @@ const AllLists = props => {
 
 const mapStateToProps = state => ({ allLists: state.lists });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addList: newList => dispatch({ type: types.ADD_LIST, payload: newList }),
-    deleteList: id => dispatch({ type: types.DELETE_LIST, payload: id }),
-    deleteItems: listId =>
-      dispatch({ type: types.DELETE_ITEMS, payload: listId }),
-    renameList: (id, newName) =>
-      dispatch({ type: types.RENAME_LIST, payload: { id: id, name: newName } })
-  };
-};
+const actionCreators = { listGetAll, listCreate, listDelete, listUpdate };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllLists);
+export default connect(mapStateToProps, actionCreators)(AllLists);

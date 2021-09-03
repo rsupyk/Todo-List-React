@@ -1,8 +1,13 @@
 import React, { useRef, useState } from 'react';
 import uuid from 'react-uuid';
 import { connect } from 'react-redux';
-import * as types from '../store/actions';
 import TodoItem from './TodoItem';
+import {
+  todoCreate,
+  todoDelete,
+  todoUpdate,
+  todoToggle
+} from '../store/actions';
 
 const TodoList = props => {
   const { list, listId, todos } = props;
@@ -18,17 +23,17 @@ const TodoList = props => {
         task: value,
         complete: false
       };
-      props.addTodo(newItem);
+      props.todoCreate(newItem);
       taskNameInput.current.value = '';
     }
   };
 
-  const handleItemClick = id => {
-    props.toggleDone(id);
+  const handleItemClick = (id, complete) => {
+    props.todoToggle(id, !complete);
   };
 
   const handleDeleteClick = id => {
-    props.deleteTodo(id);
+    props.todoDelete(id);
   };
 
   const handleRenameClick = id => {
@@ -38,7 +43,7 @@ const TodoList = props => {
   const handleRenameTodo = ({ keyCode, target: { value } }) => {
     if (keyCode === 13) {
       if (value) {
-        props.renameTodo(renameTodoId, value);
+        props.todoUpdate(renameTodoId, value);
         renameTodoInput.current.value = '';
       }
       setRenameTodoId(null);
@@ -46,7 +51,7 @@ const TodoList = props => {
   };
 
   const incompleteCount =
-    todos.filter(todo => !todo.complete).length + ' tasks remaining';
+    'tasks left: ' + todos.filter(todo => !todo.complete).length;
 
   const renderedTodos = todos.map(todo => (
     <TodoItem
@@ -71,8 +76,10 @@ const TodoList = props => {
     <div className='todo-list'>
       <div className='todo-list-header'>
         <h2>{list.name}</h2>
-        <p className='todo-list-info'>{list.dateString}</p>
-        <p className='todo-list-info'>{incompleteCount}</p>
+        <div>
+          <p className='todo-list-info'>{list.dateString}</p>
+          <p className='todo-list-info'>{incompleteCount}</p>
+        </div>
       </div>
       <div className='todo-list-body'>
         {renderedTodos}
@@ -95,14 +102,6 @@ const mapStateToProps = (state, ownProps) => {
   return { list, todos };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    addTodo: newTodo => dispatch({ type: types.ADD_ITEM, payload: newTodo }),
-    deleteTodo: id => dispatch({ type: types.DELETE_ITEM, payload: id }),
-    renameTodo: (id, newName) =>
-      dispatch({ type: types.RENAME_ITEM, payload: { id: id, task: newName } }),
-    toggleDone: id => dispatch({ type: types.TOGGLE_DONE, payload: id })
-  };
-};
+const actionCreators = { todoCreate, todoDelete, todoUpdate, todoToggle };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default connect(mapStateToProps, actionCreators)(TodoList);
